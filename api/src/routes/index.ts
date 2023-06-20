@@ -3,10 +3,6 @@ import { createUserUseCase } from "../useCases/createUserUseCase";
 import { opts } from "../entities/createUser/createUserOpts";
 
 async function routes(fastify, options) {
-  fastify.get("/user", async (request, reply) => {
-    reply.send("eita");
-  });
-
   fastify.post("/user", opts, async (request, reply) => {
     const { username, email, name, password, birthdate } = request.body;
 

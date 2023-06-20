@@ -3,6 +3,7 @@ import { Status, User } from "../../entities/User";
 import { IUserRepository } from "../../interfaces/IUserRepository";
 import { ApiError } from "../../errors";
 import { QueueRabbitProvider } from "../../providers/QueueRabbitProvider";
+import { hashPassword } from "../../utils/encrypt";
 
 export class CreateUserUseCase {
   constructor(
@@ -19,11 +20,13 @@ export class CreateUserUseCase {
       throw new ApiError(400, "Nome de usuário já existente!");
     }
 
+    const hashPass = await hashPassword(password);
+
     const newUser = new User({
       username,
       email,
       name,
-      password,
+      password: hashPass,
       birthdate,
       status: "Active",
     });

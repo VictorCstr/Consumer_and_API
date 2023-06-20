@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { IUserRepository } from "../interfaces/IUserRepository";
 import { User } from "../entities/User";
-import bcrypt from "bcrypt";
 import { ApiError } from "../errors";
 
 const prisma = new PrismaClient();
