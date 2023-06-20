@@ -1,0 +1,79 @@
+version: "3.8"
+
+services:
+  db:
+    container_name: mysql_db
+    image: mysql:latest
+    volumes:
+      - db_data_info:/mysql
+    restart: always
+    env_file:
+      - ./back/.db.env
+    ports:
+      - "3306:3306"
+    expose:
+      - 3306
+    networks:
+      - backend
+
+  api:
+    container_name: fastify_api
+    depends_on:
+      - db
+      - rabbit
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile
+      target: development
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    restart: always
+    env_file:
+      - ./api/.env
+    networks:
+      - backend
+
+  consumer:
+    container_name: consumer_service
+    depends_on:
+      - db
+      - api
+      - rabbit
+    build:
+      context: .
+      dockerfile: ./consumer/Dockerfile
+      target: development
+    ports:
+      - "9090:9090"
+    expose:
+      - "9090"
+    restart: always
+    env_file:
+      - ./consumer/.env
+    networks:
+      - backend
+
+  rabbit:
+    container_name: rabbitmq
+    image: rabbitmq:3-management-alpine
+    depends_on:
+      - api
+    ports:
+      - 5672:5672
+      - 15672:15672
+    expose:
+      - "5672"
+      - "15672"
+    restart: always
+    networks:
+      - backend
+    volumes:
+      - db_data_info:/rabbitmq
+
+volumes:
+  db_data_info: {}
+networks:
+  backend:
+    driver: bridge
