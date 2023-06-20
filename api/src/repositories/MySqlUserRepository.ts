@@ -11,27 +11,13 @@ export class MySqlUserRepository implements IUserRepository {
 
   async existUser(username: string): Promise<Boolean> {
     try {
-      throw new Error("Method not implemented yet");
+      const user: [] =
+        await prisma.$queryRaw` SELECT name FROM user WHERE username = ${username}`;
+
+      return user.length > 0 ? true : false;
     } catch (error) {
       console.log(error);
       throw new ApiError(400, error);
-    }
-  }
-
-  async verify(username: string, password: string): Promise<Boolean> {
-    try {
-      throw new Error("Method not implemented yet");
-    } catch (error) {
-      console.log(error);
-      throw new ApiError(400, error);
-    }
-  }
-
-  async cancel(username: string): Promise<Boolean> {
-    try {
-      throw new Error("Method not implemented yet");
-    } catch (err) {
-      throw new Error("Method not implemented yet");
     }
   }
 }

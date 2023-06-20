@@ -1,6 +1,5 @@
-export interface ICreateUserDTO {
+export interface ICancelUserDTO {
   username: string;
-  email: string;
   name: string;
   password: string;
   birthdate: Date;
