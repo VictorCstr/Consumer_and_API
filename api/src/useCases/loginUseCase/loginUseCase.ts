@@ -17,17 +17,13 @@ export class LoginUseCase {
 
     const user = await this.userRepository.getUser(username);
 
-    if (user) {
-      const correctPassword = await this.userRepository.verify(
-        username,
-        password
-      );
+    const correctPassword = await this.userRepository.verify(
+      username,
+      password
+    );
 
-      if (correctPassword != true) {
-        throw new ApiError(403, "Dados incorretos");
-      }
-    } else {
-      throw new ApiError(404, "Usuário não encontrado");
+    if (correctPassword != true) {
+      throw new ApiError(403, "Dados incorretos");
     }
 
     return { id: user.id, username: user.username };

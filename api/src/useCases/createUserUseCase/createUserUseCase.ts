@@ -24,7 +24,7 @@ export class CreateUserUseCase {
       email,
       name,
       password: hashPass,
-      birthdate,
+      birthdate: new Date(birthdate),
       status: "Active",
     });
 

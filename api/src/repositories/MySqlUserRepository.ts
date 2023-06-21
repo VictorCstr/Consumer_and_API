@@ -3,8 +3,6 @@ import { IUserRepository } from "../interfaces/IUserRepository";
 import { User } from "../entities/User";
 import { ApiError } from "../errors";
 import bcrypt from "bcrypt";
-import fastify from "fastify";
-import { signToken } from "../utils/fastifyJWT";
 import { Login } from "../entities/Login";
 
 const prisma = new PrismaClient();
@@ -30,7 +28,7 @@ export class MySqlUserRepository implements IUserRepository {
         await prisma.$queryRaw` SELECT password FROM user WHERE username = ${username}`;
 
       if (await !bcrypt.compareSync(password, user[0].password)) {
-        throw new ApiError(401, "Não autorizado!");
+        return false;
       }
 
       return true;
