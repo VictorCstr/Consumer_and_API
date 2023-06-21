@@ -41,15 +41,20 @@ export class MySqlUserRepository implements IUserRepository {
     }
   }
 
-  async update(user: User): Promise<User> {
+  async update(user: User): Promise<Boolean> {
     const { id, username, email, name, password, status, birthdate } = user;
 
     try {
-      throw new ApiError(400, "Not implemented");
-      // const userUpdate =
-      //   await prisma.$queryRaw` UPDATE user SET= (${id} ,${username} ,${email} ,${name} ,${password} ,${status} ,${birthdate} )`;
+      const result = await prisma.$executeRaw`
+        UPDATE user (username, name, password,status, birthdate, email)
+        VALUES (${username}, ${name}, ${password}, ${status}, ${birthdate}, ${email} ) 
+        WHERE id = ${id};`;
 
-      // return userUpdate;
+      if (result < 1) {
+        return false;
+      }
+
+      return true;
     } catch (error) {
       console.log(error);
       throw new ApiError(400, error);
