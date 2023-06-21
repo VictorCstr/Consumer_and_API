@@ -9,7 +9,7 @@ async function routes(fastify, options) {
   fastify.post(
     "/user",
     {
-      preValidation: [fastify.validateCreateInput],
+      preValidation: [fastify.validateCreateInput, fastify.convertDate],
       schema: createUserOpts,
     },
     async (request, reply) => {

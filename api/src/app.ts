@@ -9,6 +9,7 @@ app.register(require("@fastify/jwt"), {
 
 app.register(require("./utils/validate"));
 app.register(require("./utils/validateInputs"));
+app.register(require("./utils/convertDate"));
 
 const port = 8081;
 
