@@ -4,7 +4,7 @@ import { FakeUserRepository } from "../../repositories/FakeUserRepository";
 
 const { assert, should, expect } = chai;
 
-describe("User Login, POST /login", () => {
+describe("User Login, POST /user/login", () => {
   let fakeRepository, useCase;
   before(() => {
     fakeRepository = new FakeUserRepository();

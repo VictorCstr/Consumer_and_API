@@ -12,7 +12,7 @@ describe("User Create, POST /user", () => {
     useCase = new CreateUserUseCase(fakeRepository);
   });
 
-  it("should create a new User on database", async () => {
+  it("should send to the queue to create a new user and return true", async () => {
     const user = {
       name: "Victor Castro",
       username: "victorcastr",

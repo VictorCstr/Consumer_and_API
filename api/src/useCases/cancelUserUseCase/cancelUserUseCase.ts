@@ -12,25 +12,24 @@ export class CancelUserUseCase {
 
     const existUser = await this.userRepository.existUser(username);
 
-    if (existUser == true) {
-      const correctPassword = await this.userRepository.verify(
-        username,
-        password
-      );
-
-      if (correctPassword != true) {
-        throw new ApiError(
-          403,
-          "Usuário já cadastrado, mas a senha não condiz"
-        );
-      }
-
-      QueueRabbitProvider.getInstance().publish({
-        exchange: "event-cancel",
-        content: username,
-      });
-
-      return true;
+    if (existUser != true) {
+      throw new ApiError(404, "Usuário não existente");
     }
+
+    const correctPassword = await this.userRepository.verify(
+      username,
+      password
+    );
+
+    if (correctPassword != true) {
+      throw new ApiError(403, "Dados incorretos");
+    }
+
+    QueueRabbitProvider.getInstance().publish({
+      exchange: "event-cancel",
+      content: username,
+    });
+
+    return true;
   }
 }
