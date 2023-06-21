@@ -1,4 +1,4 @@
-export const opts = {
+export const createUserOpts = {
   schema: {
     body: {
       type: "object",

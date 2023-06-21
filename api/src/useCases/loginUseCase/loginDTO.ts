@@ -1,4 +1,4 @@
-export interface ICancelUserDTO {
+export interface ILoginDTO {
   username: string;
   password: string;
 }

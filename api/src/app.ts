@@ -3,6 +3,12 @@ import { routes } from "./routes";
 import { QueueRabbitProvider } from "./providers/QueueRabbitProvider";
 
 const app = fastify({ logger: true });
+app.register(require("@fastify/jwt"), {
+  secret: process.env.SECRET_KEY,
+});
+
+app.register(require("./utils/validate"));
+
 const port = 8081;
 
 const config = {

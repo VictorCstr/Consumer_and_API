@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-     "start": "NODE_PATH=./build node build/server.js",
+    "start": "NODE_PATH=./build node build/server.js",
     "build": "tsc -p .",
     "prisma": "npx prisma generate",
     "dev": "tsnd --respawn --transpile-only src/app.ts",
@@ -14,6 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/jwt": "^7.0.0",
     "@prisma/client": "^4.16.0",
     "amqplib": "^0.10.3",
     "bcrypt": "^5.1.0",

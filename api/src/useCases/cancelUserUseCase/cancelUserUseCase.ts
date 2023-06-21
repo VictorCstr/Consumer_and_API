@@ -2,16 +2,13 @@ import { ICancelUserDTO } from "./cancelUserDTO";
 import { Status, User } from "../../entities/User";
 import { IUserRepository } from "../../interfaces/IUserRepository";
 import { ApiError } from "../../errors";
+import { QueueRabbitProvider } from "../../providers/QueueRabbitProvider";
 
 export class CancelUserUseCase {
   constructor(private userRepository: IUserRepository, private queueProvider) {}
 
   async execute(data: ICancelUserDTO): Promise<Boolean> {
-    const { username, name, password, birthdate } = data;
-
-    if (!name || !password || !username || !birthdate) {
-      throw new ApiError(400, "Dados não informados pelo cliente");
-    }
+    const { username, password } = data;
 
     const existUser = await this.userRepository.existUser(username);
 
@@ -21,34 +18,19 @@ export class CancelUserUseCase {
         password
       );
 
-      if (correctPassword) {
-        await this.queueProvider.getInstance().publish({
-          exchange: "event-cancel",
-          routingKey: "cancel-user.update",
-          content: data,
-        });
-      } else {
+      if (correctPassword != true) {
         throw new ApiError(
           403,
           "Usuário já cadastrado, mas a senha não condiz"
         );
       }
+
+      QueueRabbitProvider.getInstance().publish({
+        exchange: "event-cancel",
+        content: username,
+      });
+
+      return true;
     }
-
-    const newUser = new User({
-      username,
-      name,
-      password,
-      birthdate,
-      status: "Active",
-    });
-
-    await this.queueProvider.getInstance().publish({
-      exchange: "event-cancel",
-      routingKey: "cancel-user.createUser",
-      content: data,
-    });
-
-    return true;
   }
 }
