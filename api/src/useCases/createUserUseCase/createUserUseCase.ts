@@ -11,12 +11,6 @@ export class CreateUserUseCase {
   async execute(data: ICreateUserDTO): Promise<Boolean> {
     const { username, name, email, password, birthdate } = data;
 
-    const existUser = await this.userRepository.existUser(username);
-
-    if (existUser == true) {
-      throw new ApiError(400, "Nome de usuário já existente!");
-    }
-
     const hashPass = await hashPassword(password);
 
     const newUser = new User({

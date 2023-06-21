@@ -27,23 +27,6 @@ describe("User Create, POST /user", () => {
     expect(userCreated).to.have.be.true;
   });
 
-  it("should throw an Error if User already exists on database", async () => {
-    const user = {
-      name: "Victor Castro",
-      username: "usuario123",
-      email: "victor@teste.com",
-      password: "@TesteDeSenha123",
-      birthdate: "25-12-1999",
-    };
-
-    const userCreated = await useCase.execute(user).catch((err) => {
-      expect(err.statusCode).to.equal(400);
-      expect(err.msg).to.equal("Nome de usuário já existente!");
-    });
-
-    expect(userCreated).to.be.undefined;
-  });
-
   it("should throw an Error if not send all the data required", async () => {
     const user = {
       name: "Victor Castro",
