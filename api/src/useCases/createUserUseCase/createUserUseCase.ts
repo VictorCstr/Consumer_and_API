@@ -6,10 +6,7 @@ import { QueueRabbitProvider } from "../../providers/QueueRabbitProvider";
 import { hashPassword } from "../../utils/encrypt";
 
 export class CreateUserUseCase {
-  constructor(
-    private userRepository: IUserRepository,
-    private queueProvider: QueueRabbitProvider
-  ) {}
+  constructor(private userRepository: IUserRepository) {}
 
   async execute(data: ICreateUserDTO): Promise<Boolean> {
     const { username, name, email, password, birthdate } = data;

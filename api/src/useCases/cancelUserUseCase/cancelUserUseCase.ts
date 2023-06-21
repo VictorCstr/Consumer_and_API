@@ -5,7 +5,7 @@ import { ApiError } from "../../errors";
 import { QueueRabbitProvider } from "../../providers/QueueRabbitProvider";
 
 export class CancelUserUseCase {
-  constructor(private userRepository: IUserRepository, private queueProvider) {}
+  constructor(private userRepository: IUserRepository) {}
 
   async execute(data: ICancelUserDTO): Promise<Boolean> {
     const { username, password } = data;

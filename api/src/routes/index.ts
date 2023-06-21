@@ -6,19 +6,26 @@ import { loginUserOpts } from "../entities/loginUser/loginUserOpts";
 import { loginUseCase } from "../useCases/loginUseCase";
 
 async function routes(fastify, options) {
-  fastify.post("/user", createUserOpts, async (request, reply) => {
-    const { username, email, name, password, birthdate } = request.body;
+  fastify.post(
+    "/user",
+    {
+      preValidation: [fastify.validateCreateInput],
+      schema: createUserOpts,
+    },
+    async (request, reply) => {
+      const { username, email, name, password, birthdate } = request.body;
 
-    const execute = await createUserUseCase.execute({
-      username,
-      name,
-      email,
-      password,
-      birthdate,
-    });
+      const execute = await createUserUseCase.execute({
+        username,
+        name,
+        email,
+        password,
+        birthdate,
+      });
 
-    return reply.send(execute);
-  });
+      return reply.send(execute);
+    }
+  );
 
   fastify.post(
     "/user/cancel",
