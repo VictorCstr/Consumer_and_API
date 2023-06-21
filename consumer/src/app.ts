@@ -1,4 +1,19 @@
+import http from "http";
 import { QueueRabbitProvider } from "./providers/QueueRabbitProvider";
+import { createUserUseCase } from "./useCases/createUserUseCase";
+
+const host = "localhost";
+const port = 9090;
+
+const requestListener = function (req, res) {
+  res.writeHead(200);
+  res.end("Server running and receiving messages from the api");
+};
+
+const server = http.createServer(requestListener);
+server.listen(port, host, () => {
+  console.log(`Server is running on http://${host}:${port}`);
+});
 
 const config = {
   exchanges: [
@@ -46,4 +61,37 @@ const config = {
   ],
 };
 
-QueueRabbitProvider.getInstance().initialize(config);
+const rabbitprovider = new QueueRabbitProvider();
+
+rabbitprovider.initialize(config).then(() =>
+  rabbitprovider.listenQueue({
+    queue: "create",
+    action: async (msg) => {
+      const data = msg.content.toString();
+      const user = JSON.parse(data);
+      try {
+        const result = await createUserUseCase.execute({
+          id: user.id,
+          name: user.name,
+          username: user.username,
+          email: user.email,
+          birthdate: user.birthdate,
+          password: user.password,
+        });
+        console.log("Mensagem consumida com sucesso");
+      } catch (e) {
+        let retry = user.retry ?? 0;
+        retry += 1;
+        const routingKey = `retry-1`;
+        while (retry <= 1) {
+          await rabbitprovider.publish({
+            exchange: "create.ttl",
+            routingKey,
+            content: { ...user, retry },
+          });
+        }
+        console.error(e);
+      }
+    },
+  })
+);

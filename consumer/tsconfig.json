@@ -4,7 +4,7 @@
     "lib": ["ES2018", "ESNext.AsyncIterable"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "module": "commonjs",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "rootDir": "./",
     "outDir": "./build",

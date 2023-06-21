@@ -22,14 +22,19 @@ export class MySqlUserRepository implements IUserRepository {
     }
   }
 
-  async create(user: User): Promise<User> {
+  async create(user: User): Promise<Boolean> {
     try {
       const { id, username, email, name, password, status, birthdate } = user;
 
-      const userCreate =
-        await prisma.$queryRaw` INSERT into user VALUES (${id} ,${username} ,${email} ,${name} ,${password} ,${status} ,${birthdate} )`;
+      const result = await prisma.$executeRaw`
+        INSERT INTO user (id, username, name, password,status, birthdate, email)
+        VALUES (${id}, ${username}, ${name}, ${password}, ${status}, ${birthdate}, ${email} );`;
 
-      return userCreate;
+      if (result < 1) {
+        return false;
+      }
+
+      return true;
     } catch (error) {
       console.log(error);
       throw new ApiError(400, error);
