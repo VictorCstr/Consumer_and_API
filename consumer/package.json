@@ -8,5 +8,13 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^4.16.0",
+    "amqplib": "^0.10.3",
+    "prisma": "^4.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.1"
+  }
 }
