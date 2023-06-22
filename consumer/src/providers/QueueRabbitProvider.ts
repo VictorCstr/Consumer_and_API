@@ -6,7 +6,18 @@ export class QueueRabbitProvider {
   private _conn: Connection;
   private _channel: Channel;
 
-  async initialize(config): Promise<any> {
+  private static _instance;
+  private _client;
+
+  static getInstance() {
+    if (!QueueRabbitProvider._instance) {
+      QueueRabbitProvider._instance = new QueueRabbitProvider();
+    }
+
+    return QueueRabbitProvider._instance;
+  }
+
+  async initialize(config) {
     const { QUEUE_URL } = process.env;
 
     this._conn = await connect(QUEUE_URL);
@@ -20,7 +31,10 @@ export class QueueRabbitProvider {
 
     this._conn.on("close", function () {
       console.error("[AMQP] reconnecting");
-      return setTimeout(() => this.initialize(config), 1000);
+      return setTimeout(
+        async () => this.getInstance().initialize(config),
+        1000
+      );
     });
 
     console.log("[AMQP] connected");

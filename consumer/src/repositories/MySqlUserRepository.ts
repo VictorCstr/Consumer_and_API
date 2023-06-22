@@ -20,18 +20,26 @@ export class MySqlUserRepository implements IUserRepository {
     }
   }
 
+  async alreadyCanceled(username: string): Promise<Boolean> {
+    try {
+      const user =
+        await prisma.$queryRaw` SELECT status FROM user WHERE username = ${username}`;
+
+      return user[0].status == "Cancelled" ? true : false;
+    } catch (error) {
+      console.log(error);
+      throw new ApiError(400, error);
+    }
+  }
+
   async cancel(username: string): Promise<Boolean> {
     try {
       const result = await prisma.$executeRaw`
-        DELETE from user where username=${username}
-        `;
+        UPDATE user SET status = "Cancelled" where username = ${username} `;
 
       if (result < 1) {
         return false;
       }
-
-      console.log(result);
-      console.log(result);
 
       return true;
     } catch (error) {
