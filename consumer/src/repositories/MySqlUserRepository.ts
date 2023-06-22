@@ -22,12 +22,18 @@ export class MySqlUserRepository implements IUserRepository {
 
   async cancel(username: string): Promise<Boolean> {
     try {
-      throw new ApiError(400, "Not implemented");
+      const result = await prisma.$executeRaw`
+        DELETE from user where username=${username}
+        `;
 
-      // const userCreate =
-      //   await prisma.$queryRaw` INSERT into user VALUES (${id} ,${username} ,${email} ,${name} ,${password} ,${status} ,${birthdate} )`;
+      if (result < 1) {
+        return false;
+      }
 
-      // return true;
+      console.log(result);
+      console.log(result);
+
+      return true;
     } catch (error) {
       console.log(error);
       throw new ApiError(400, error);
