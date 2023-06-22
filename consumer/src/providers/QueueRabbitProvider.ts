@@ -27,7 +27,6 @@ export class QueueRabbitProvider {
   }
 
   async listenQueue({ queue, action }: { queue: string; action: Action }) {
-    console.log(this._channel);
     this._channel.consume(queue, (msg) => {
       try {
         action(msg, this._channel);

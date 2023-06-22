@@ -1,6 +1,8 @@
 import http from "http";
 import { QueueRabbitProvider } from "./providers/QueueRabbitProvider";
 import { createUserUseCase } from "./useCases/createUserUseCase";
+import { MySqlUserRepository } from "./repositories/MySqlUserRepository";
+import { updateUserUseCase } from "./useCases/updateUserUseCase";
 
 const host = "localhost";
 const port = 9090;
@@ -70,15 +72,28 @@ rabbitprovider.initialize(config).then(() =>
       const data = msg.content.toString();
       const user = JSON.parse(data);
       try {
-        const result = await createUserUseCase.execute({
-          id: user.id,
-          name: user.name,
-          username: user.username,
-          email: user.email,
-          birthdate: user.birthdate,
-          password: user.password,
-        });
-        console.log("Mensagem consumida com sucesso");
+        const existUser = await MySqlUserRepository.existUser(user.username);
+        if (existUser == true) {
+          const result = await updateUserUseCase.execute({
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            birthdate: new Date(user.birthdate),
+            password: user.password,
+          });
+          console.log("Mensagem consumida com sucesso - Update");
+        } else {
+          const result = await createUserUseCase.execute({
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            birthdate: new Date(user.birthdate),
+            password: user.password,
+          });
+          console.log("Mensagem consumida com sucesso - Create");
+        }
       } catch (e) {
         let retry = user.retry ?? 0;
         retry += 1;

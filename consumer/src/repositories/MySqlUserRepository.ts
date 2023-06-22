@@ -8,6 +8,18 @@ const prisma = new PrismaClient();
 export class MySqlUserRepository implements IUserRepository {
   constructor() {}
 
+  static async existUser(username: string): Promise<Boolean> {
+    try {
+      const user: [] =
+        await prisma.$queryRaw` SELECT name FROM user WHERE username = ${username}`;
+
+      return user.length > 0 ? true : false;
+    } catch (error) {
+      console.log(error);
+      throw new ApiError(400, error);
+    }
+  }
+
   async cancel(username: string): Promise<Boolean> {
     try {
       throw new ApiError(400, "Not implemented");
@@ -46,27 +58,14 @@ export class MySqlUserRepository implements IUserRepository {
 
     try {
       const result = await prisma.$executeRaw`
-        UPDATE user (username, name, password,status, birthdate, email)
-        VALUES (${username}, ${name}, ${password}, ${status}, ${birthdate}, ${email} ) 
-        WHERE id = ${id};`;
+        UPDATE user SET username =${username}, name =${name}, password =${password},
+        birthdate =${birthdate}, email =${email} where username = ${username} `;
 
       if (result < 1) {
         return false;
       }
 
       return true;
-    } catch (error) {
-      console.log(error);
-      throw new ApiError(400, error);
-    }
-  }
-
-  async existUser(username: string): Promise<Boolean> {
-    try {
-      const user: [] =
-        await prisma.$queryRaw` SELECT name FROM user WHERE username = ${username}`;
-
-      return user.length > 0 ? true : false;
     } catch (error) {
       console.log(error);
       throw new ApiError(400, error);

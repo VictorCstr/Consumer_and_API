@@ -16,7 +16,7 @@ export class UpdateUserUseCase {
       birthdate,
     });
 
-    await this.userRepository.update(userToUpdate);
+    const update = await this.userRepository.update(userToUpdate);
 
     return true;
   }
