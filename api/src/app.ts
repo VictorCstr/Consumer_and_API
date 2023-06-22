@@ -16,16 +16,18 @@ const port = 8081;
 const config = {
   exchanges: [
     { name: "event-create", type: "direct" },
-    { name: "create.ttl", type: "direct" },
-    { name: "create.dlx", type: "fanout" },
+    { name: "create-ttl", type: "direct" },
+    { name: "create-dlx", type: "direct" },
 
     { name: "event-cancel", type: "direct" },
-    { name: "cancel.ttl", type: "direct" },
-    { name: "cancel.dlx", type: "fanout" },
+    { name: "cancel-ttl", type: "direct" },
+    { name: "cancel-dlx", type: "direct" },
   ],
   queues: [
     { name: "create" },
     { name: "cancel" },
+    { name: "create.dlx" },
+    { name: "cancel.dlx" },
     { name: "cancel-retry-30s", dlx: "cancel.dlx", ttl: 30000 },
     { name: "create-retry-30s", dlx: "create.dlx", ttl: 30000 },
   ],
@@ -39,12 +41,12 @@ const config = {
       target: "cancel",
     },
     {
-      exchange: "cancel.dlx",
-      target: "cancel",
+      exchange: "cancel-dlx",
+      target: "cancel.dlx",
     },
     {
-      exchange: "create.dlx",
-      target: "create",
+      exchange: "create-dlx",
+      target: "create.dlx",
     },
     {
       exchange: "cancel.ttl",
