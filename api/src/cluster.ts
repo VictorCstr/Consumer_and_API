@@ -1,7 +1,6 @@
 import cluster from "cluster";
 import os from "os";
 import app from "./app";
-import fs from "fs";
 
 const port = 8081;
 

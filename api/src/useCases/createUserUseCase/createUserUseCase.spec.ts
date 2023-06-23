@@ -1,7 +1,7 @@
 import chai from "chai";
 import { CreateUserUseCase } from "./createUserUseCase";
 import { FakeUserRepository } from "../../repositories/FakeUserRepository";
-import exp from "constants";
+import { CacheRepository } from "../../repositories/CacheRepository";
 
 const { assert, should, expect } = chai;
 
@@ -9,7 +9,7 @@ describe("User Create, POST /user", () => {
   let fakeRepository, useCase;
   before(() => {
     fakeRepository = new FakeUserRepository();
-    useCase = new CreateUserUseCase(fakeRepository);
+    useCase = new CreateUserUseCase(fakeRepository, new CacheRepository());
   });
 
   it("should send to the queue to create a new user and return true", async () => {
@@ -24,7 +24,7 @@ describe("User Create, POST /user", () => {
     const userCreated = await useCase.execute(user);
 
     expect(userCreated).to.not.be.undefined;
-    expect(userCreated).to.have.be.true;
+    expect(userCreated.success).to.be.true;
   });
 
   it("should throw an Error if not send all the data required", async () => {

@@ -20,7 +20,7 @@ describe("User Cancel, POST /user/cancel", () => {
     const userCancel = await useCase.execute(user);
 
     expect(userCancel).to.not.be.undefined;
-    expect(userCancel).to.have.be.true;
+    expect(userCancel.success).to.be.true;
   });
 
   it("should throw an Error if User it's not registered on database", async () => {
@@ -56,7 +56,6 @@ describe("User Cancel, POST /user/cancel", () => {
     };
 
     const userCreated = await useCase.execute(user).catch((err) => {
-      console.log(err);
       expect(err.statusCode).to.equal(403);
       expect(err.msg).to.equal("Dados incorretos");
     });
