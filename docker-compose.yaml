@@ -16,6 +16,21 @@ services:
     networks:
       - backend
 
+  cache:
+    container_name: cache_repository
+    image: redis:latest
+    volumes:
+      - db_data_info:/redis
+    restart: always
+    env_file:
+      - ./api/.env
+    ports:
+      - "6379:6379"
+    expose:
+      - 3306
+    networks:
+      - backend
+
   api:
     container_name: fastify_api
     depends_on:
