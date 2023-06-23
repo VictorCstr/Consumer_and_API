@@ -17,6 +17,10 @@ export class LoginUseCase {
 
     const user = await this.userRepository.getUser(username);
 
+    if (user.id == undefined) {
+      throw new ApiError(404, "Usuário não cadastrado ainda");
+    }
+
     const correctPassword = await this.userRepository.verify(
       username,
       password

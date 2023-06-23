@@ -3,11 +3,12 @@ import { Status, User } from "../../entities/User";
 import { IUserRepository } from "../../interfaces/IUserRepository";
 import { ApiError } from "../../errors";
 import { QueueRabbitProvider } from "../../providers/QueueRabbitProvider";
+import { SuccessMessage } from "../../entities/SuccessMessage";
 
 export class CancelUserUseCase {
   constructor(private userRepository: IUserRepository) {}
 
-  async execute(data: ICancelUserDTO): Promise<Boolean> {
+  async execute(data: ICancelUserDTO): Promise<SuccessMessage> {
     const { username, password } = data;
 
     const existUser = await this.userRepository.existUser(username);
@@ -30,6 +31,9 @@ export class CancelUserUseCase {
       content: username,
     });
 
-    return true;
+    return {
+      success: true,
+      message: "Cancelamento do usuário enviado com sucesso",
+    };
   }
 }

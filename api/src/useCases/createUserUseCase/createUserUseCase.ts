@@ -5,6 +5,7 @@ import { ApiError } from "../../errors";
 import { QueueRabbitProvider } from "../../providers/QueueRabbitProvider";
 import { hashPassword } from "../../utils/encrypt";
 import { ICacheRepository } from "../../interfaces/ICacheRepository";
+import { SuccessMessage } from "../../entities/SuccessMessage";
 
 export class CreateUserUseCase {
   constructor(
@@ -12,7 +13,7 @@ export class CreateUserUseCase {
     private cache: ICacheRepository
   ) {}
 
-  async execute(data: ICreateUserDTO): Promise<Boolean> {
+  async execute(data: ICreateUserDTO): Promise<SuccessMessage> {
     const { username, name, email, password, birthdate } = data;
 
     const hashPass = await hashPassword(password);
@@ -33,6 +34,9 @@ export class CreateUserUseCase {
 
     await this.cache.set(username, "");
 
-    return true;
+    return {
+      success: true,
+      message: "Cadastro do usuário atualizado com sucesso",
+    };
   }
 }

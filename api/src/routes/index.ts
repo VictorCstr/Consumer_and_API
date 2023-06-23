@@ -53,10 +53,13 @@ async function routes(fastify, options) {
       password,
     });
 
-    const token = await fastify.jwt.sign({
-      id: execute.id,
-      username: execute.username,
-    });
+    const token = await fastify.jwt.sign(
+      {
+        id: execute.id,
+        username: execute.username,
+      },
+      { expiresIn: "1h" }
+    );
 
     return reply.send(token);
   });

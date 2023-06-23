@@ -47,8 +47,8 @@ export class MySqlUserRepository implements IUserRepository {
         await prisma.$queryRaw` SELECT id, username FROM user WHERE username = ${username}`;
 
       return {
-        id: user[0].id,
-        username: user[0].username,
+        id: user[0]?.id,
+        username: user[0]?.username,
       };
     } catch (error) {
       throw new ApiError(400, error);
