@@ -7,7 +7,7 @@
     "start": "NODE_PATH=./build node build/app.js",
     "build": "tsc -p .",
     "prisma": "npx prisma generate",
-    "dev": "tsnd --respawn --transpile-only src/app.ts",
+    "dev": "tsnd --respawn --transpile-only src/cluster.ts",
     "test": "ts-mocha -p tsconfig.json src/useCases/**/*.spec.ts --timeout 10000"
   },
   "keywords": [],

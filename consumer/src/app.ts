@@ -6,19 +6,6 @@ import { updateUserUseCase } from "./useCases/updateUserUseCase";
 import { cancelUserUseCase } from "./useCases/cancelUserUseCase";
 import { ApiError } from "./errors";
 
-const host = "localhost";
-const port = 9090;
-
-const requestListener = function (req, res) {
-  res.writeHead(200);
-  res.end("Server running and receiving messages from the api");
-};
-
-const server = http.createServer(requestListener);
-server.listen(port, host, () => {
-  console.log(`Server is running on http://${host}:${port}`);
-});
-
 const config = {
   exchanges: [
     { name: "event-create", type: "direct" },
