@@ -68,8 +68,6 @@ export class QueueRabbitProvider {
         1000
       );
     });
-
-    console.log("[AMQP] connected");
   }
 
   async publish({

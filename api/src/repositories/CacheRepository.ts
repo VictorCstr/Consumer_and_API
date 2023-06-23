@@ -6,9 +6,7 @@ export class CacheRepository implements ICacheRepository {
 
   constructor() {
     this._client = new Redis();
-
     this._client.on("error", (err) => console.error("Redis Client Error", err));
-    this._client.on("connect", () => console.log("Cache initialized."));
   }
 
   async get(key: string) {

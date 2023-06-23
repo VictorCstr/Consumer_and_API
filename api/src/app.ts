@@ -1,10 +1,9 @@
 import fastify from "fastify";
 import { routes } from "./routes";
 import { QueueRabbitProvider } from "./providers/QueueRabbitProvider";
-import { CacheProvider } from "./repositories/CacheRepository";
 
 const app = fastify();
-// { logger: true }
+
 app.register(require("@fastify/jwt"), {
   secret: process.env.SECRET_KEY,
 });
@@ -12,8 +11,6 @@ app.register(require("@fastify/jwt"), {
 app.register(require("./utils/validate"));
 app.register(require("./utils/validateInputs"));
 app.register(require("./utils/convertDate"));
-
-const port = 8081;
 
 const config = {
   exchanges: [
@@ -67,9 +64,4 @@ QueueRabbitProvider.getInstance().initialize(config);
 
 app.register(routes);
 
-app.listen({ port }, function (err, address) {
-  if (err) {
-    app.log.error(err);
-    process.exit(1);
-  }
-});
+export default app;
