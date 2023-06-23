@@ -2,9 +2,9 @@
   "name": "api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "cluster.js",
   "scripts": {
-    "start": "NODE_PATH=./build node build/server.js",
+    "start": "NODE_PATH=./build node build/cluster.js",
     "build": "tsc -p .",
     "prisma": "npx prisma generate",
     "dev": "tsnd --respawn --transpile-only src/cluster.ts",

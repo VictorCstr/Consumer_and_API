@@ -5,7 +5,7 @@ export class CacheRepository implements ICacheRepository {
   private _client;
 
   constructor() {
-    this._client = new Redis();
+    this._client = new Redis(process.env.REDIS_URL);
     this._client.on("error", (err) => console.error("Redis Client Error", err));
   }
 

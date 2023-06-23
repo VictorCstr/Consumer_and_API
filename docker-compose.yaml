@@ -1,6 +1,21 @@
 version: "3.8"
 
 services:
+  rabbit:
+    container_name: rabbitmq
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    expose:
+      - "5672"
+      - "15672"
+    restart: always
+    networks:
+      - backend
+    volumes:
+      - db_data_info:/rabbitmq
+
   db:
     container_name: mysql_db
     image: mysql:latest
@@ -8,11 +23,11 @@ services:
       - db_data_info:/mysql
     restart: always
     env_file:
-      - ./back/.db.env
+      - ./api/.db.env
     ports:
       - "3306:3306"
     expose:
-      - 3306
+      - "3306"
     networks:
       - backend
 
@@ -22,28 +37,26 @@ services:
     volumes:
       - db_data_info:/redis
     restart: always
-    env_file:
-      - ./api/.env
     ports:
       - "6379:6379"
     expose:
-      - 3306
+      - "6379"
     networks:
       - backend
 
   api:
     container_name: fastify_api
     depends_on:
-      - db
       - rabbit
+      - cache
     build:
       context: .
       dockerfile: ./api/Dockerfile
       target: development
     ports:
-      - "8080:8080"
+      - "9080:9080"
     expose:
-      - "8080"
+      - "9080"
     restart: always
     env_file:
       - ./api/.env
@@ -53,8 +66,6 @@ services:
   consumer:
     container_name: consumer_service
     depends_on:
-      - db
-      - api
       - rabbit
     build:
       context: .
@@ -69,23 +80,6 @@ services:
       - ./consumer/.env
     networks:
       - backend
-
-  rabbit:
-    container_name: rabbitmq
-    image: rabbitmq:3-management-alpine
-    depends_on:
-      - api
-    ports:
-      - 5672:5672
-      - 15672:15672
-    expose:
-      - "5672"
-      - "15672"
-    restart: always
-    networks:
-      - backend
-    volumes:
-      - db_data_info:/rabbitmq
 
 volumes:
   db_data_info: {}

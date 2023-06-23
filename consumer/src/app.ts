@@ -42,12 +42,12 @@ const config = {
       target: "create.dlx",
     },
     {
-      exchange: "cancel.ttl",
+      exchange: "cancel-ttl",
       target: "cancel-retry-30s",
       key: "retry-1",
     },
     {
-      exchange: "create.ttl",
+      exchange: "create-ttl",
       target: "create-retry-30s",
       key: "retry-1",
     },
