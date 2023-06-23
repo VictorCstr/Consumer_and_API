@@ -4,9 +4,13 @@ import { IUserRepository } from "../../interfaces/IUserRepository";
 import { ApiError } from "../../errors";
 import { QueueRabbitProvider } from "../../providers/QueueRabbitProvider";
 import { hashPassword } from "../../utils/encrypt";
+import { ICacheRepository } from "../../interfaces/ICacheRepository";
 
 export class CreateUserUseCase {
-  constructor(private userRepository: IUserRepository) {}
+  constructor(
+    private userRepository: IUserRepository,
+    private cache: ICacheRepository
+  ) {}
 
   async execute(data: ICreateUserDTO): Promise<Boolean> {
     const { username, name, email, password, birthdate } = data;
@@ -26,6 +30,8 @@ export class CreateUserUseCase {
       exchange: "event-create",
       content: newUser,
     });
+
+    await this.cache.set(username, "");
 
     return true;
   }

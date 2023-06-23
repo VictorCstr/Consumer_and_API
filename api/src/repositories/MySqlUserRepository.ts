@@ -1,17 +1,20 @@
 import { PrismaClient } from "@prisma/client";
 import { IUserRepository } from "../interfaces/IUserRepository";
-import { User } from "../entities/User";
 import { ApiError } from "../errors";
 import bcrypt from "bcrypt";
 import { Login } from "../entities/Login";
+import { ICacheRepository } from "../interfaces/ICacheRepository";
 
 const prisma = new PrismaClient();
 
 export class MySqlUserRepository implements IUserRepository {
-  constructor() {}
-
+  constructor(private cache: ICacheRepository) {}
   async existUser(username: string): Promise<Boolean> {
     try {
+      const existInCache = await this.cache.get(username);
+
+      if (existInCache != null) return true;
+
       const user: [] =
         await prisma.$queryRaw` SELECT name FROM user WHERE username = ${username}`;
 

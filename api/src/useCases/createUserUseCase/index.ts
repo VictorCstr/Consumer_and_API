@@ -1,8 +1,14 @@
+import { CacheRepository } from "../../repositories/CacheRepository";
 import { MySqlUserRepository } from "../../repositories/MySqlUserRepository";
 import { CreateUserUseCase } from "./createUserUseCase";
 
-const userRepository = new MySqlUserRepository();
+const cacheRepository = new CacheRepository();
 
-const createUserUseCase = new CreateUserUseCase(userRepository);
+const userRepository = new MySqlUserRepository(cacheRepository);
+
+const createUserUseCase = new CreateUserUseCase(
+  userRepository,
+  cacheRepository
+);
 
 export { createUserUseCase };
