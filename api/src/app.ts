@@ -8,6 +8,8 @@ app.register(require("@fastify/jwt"), {
   secret: process.env.SECRET_KEY,
 });
 
+app.register(import("@fastify/compress"), { requestEncodings: ["gzip"] });
+
 app.register(require("./utils/validate"));
 app.register(require("./utils/validateInputs"));
 app.register(require("./utils/convertDate"));
