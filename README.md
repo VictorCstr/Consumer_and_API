@@ -53,34 +53,45 @@ $ 'docker exec -it {id do container} sh -c 'npm run test'
 - Utilizar ferramentas como Postman ou Insomnia.
 
 ```bash
-$ Login User
+** Login User **
+
 $ Path: http://localhost:8081/user/login
 
 $ Body:
-    {
-        "username": "teste",
-        "password": "@teste"
-    }
+#   {
+#       "username": "teste",
+#       "password": "@teste"
+#   }
 
-$ Create or Update User
+
+
+** Create or Update User **
+
 $ Path: http://localhost:8081/user
 
 $ Body:
-   {
-        "name": "Victor Castro",
-        "username": "teste",
-        "email": "teste@gmail.com",
-        "password": "@teste",
-        "birthdate": "25-12-2049"
-    }
+#   {
+#        "name": "Victor Castro",
+#        "username": "teste",
+#        "email": "teste@gmail.com",
+#        "password": "@teste",
+#        "birthdate": "25-12-2049"
+#    }
 
 
-$ Cancel User
+
+** Cancel User **
+
 $ Path: http://localhost:8081/user/cancel
 
+$ Authorization Bearer : enabled
+# Informar o token. ( Somente o usuário logado pode pedir o cancelamento da sua conta )
+
 $ Body:
-    {
-        "username": "teste",
-        "password": "@teste"
-    }
+#    {
+#        "username": "teste",
+#        "password": "@teste"
+#    }
 ```
+
+Obs: A própria API faz a maior parte das validações e verificações, tanto de campos informados errados, quanto em casos como usuario não existente em rotas de cancelamento e login, onde já é retornado o erro, para arrumar os campos e mandar novamente. No caso de criar ou atualizar um cadastro, é enviado da mesma maneira para a fila. O Consumer que verifica se já existe o usuário e faz o procedimento correto.
