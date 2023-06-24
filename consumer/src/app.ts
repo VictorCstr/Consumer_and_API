@@ -65,6 +65,7 @@ export default async function listenQueue() {
         const result = await cancelUserUseCase.execute({
           username,
         });
+        logger.info("user to cancel: " + username);
         logger.info("Mensagem consumida com sucesso - Cancel");
       } catch (e) {
         if (e.msg == "Already Cancelled") {
@@ -75,6 +76,7 @@ export default async function listenQueue() {
               action: "Cancel User - Already Canceled",
             },
           });
+          logger.info("user already cancelled: " + username);
           logger.info(
             "Cancelamento movido para fila morta, usuário já cancelado"
           );
@@ -104,6 +106,7 @@ export default async function listenQueue() {
             birthdate: new Date(user.birthdate),
             password: user.password,
           });
+          logger.info("user to update: " + user);
           logger.info("Mensagem consumida com sucesso - Update");
         } else {
           const result = await createUserUseCase.execute({
@@ -114,6 +117,7 @@ export default async function listenQueue() {
             birthdate: new Date(user.birthdate),
             password: user.password,
           });
+          logger.info("user to create: " + user);
           logger.info("Mensagem consumida com sucesso - Create");
         }
       } catch (e) {

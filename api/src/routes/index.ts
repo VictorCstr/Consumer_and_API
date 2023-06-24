@@ -25,8 +25,8 @@ async function routes(fastify, options) {
       });
 
       logger.info("Received request on route POST /USER/");
-      logger.info(request);
-      logger.info(reply);
+      logger.info("request: " + request.body);
+      logger.info("reply: " + reply);
 
       return reply.send(execute);
     }
@@ -47,8 +47,8 @@ async function routes(fastify, options) {
       });
 
       logger.info("Received request on route POST /USER/CANCEL");
-      logger.info(request);
-      logger.info(reply);
+      logger.info("request: " + request.body);
+      logger.info("reply: " + reply);
 
       return reply.send(execute);
     }
@@ -71,8 +71,8 @@ async function routes(fastify, options) {
     );
 
     logger.info("Received request on route POST /USER/LOGIN");
-    logger.info(request);
-    logger.info(reply);
+    logger.info("request: " + request.body);
+    logger.info("reply: " + reply);
 
     return reply.send(token);
   });
