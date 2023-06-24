@@ -2,6 +2,7 @@
  <a href="#computer-o-projeto">Sobre</a> •
  <a href="#computer-tecnologias">Tecnologias usadas</a> • 
  <a href="#mag_right-para-rodar-o-projeto">Como rodar</a> • 
+ <a href="#mag_right-rotas">Rotas</a> • 
 </p>
 
 ## :computer: O projeto
@@ -45,4 +46,41 @@ $ docker-compose up --build
 $ Em outro terminal executar o comando abaixo com o compose ligado
 $ 'docker exec -it {id do container} sh -c 'npm run test'
 
+```
+
+## :mag_right: Rotas:
+
+- Utilizar ferramentas como Postman ou Insomnia.
+
+```bash
+$ Login User
+$ Path: http://localhost:8081/user/login
+
+$ Body:
+    {
+        "username": "teste",
+        "password": "@teste"
+    }
+
+$ Create or Update User
+$ Path: http://localhost:8081/user
+
+$ Body:
+   {
+        "name": "Victor Castro",
+        "username": "teste",
+        "email": "teste@gmail.com",
+        "password": "@teste",
+        "birthdate": "25-12-2049"
+    }
+
+
+$ Cancel User
+$ Path: http://localhost:8081/user/cancel
+
+$ Body:
+    {
+        "username": "teste",
+        "password": "@teste"
+    }
 ```
