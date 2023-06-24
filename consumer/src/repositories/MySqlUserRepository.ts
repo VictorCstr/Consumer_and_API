@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { IUserRepository } from "../interfaces/IUserRepository";
 import { User } from "../entities/User";
 import { ApiError } from "../errors";
+import logger from "../utils/logger";
 
 const prisma = new PrismaClient();
 
@@ -15,7 +16,7 @@ export class MySqlUserRepository implements IUserRepository {
 
       return user.length > 0 ? true : false;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       throw new ApiError(400, error);
     }
   }
@@ -27,7 +28,7 @@ export class MySqlUserRepository implements IUserRepository {
 
       return user[0].status == "Cancelled" ? true : false;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       throw new ApiError(400, error);
     }
   }
@@ -43,7 +44,7 @@ export class MySqlUserRepository implements IUserRepository {
 
       return true;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       throw new ApiError(400, error);
     }
   }
@@ -62,7 +63,7 @@ export class MySqlUserRepository implements IUserRepository {
 
       return true;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       throw new ApiError(400, error);
     }
   }
@@ -81,7 +82,7 @@ export class MySqlUserRepository implements IUserRepository {
 
       return true;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       throw new ApiError(400, error);
     }
   }

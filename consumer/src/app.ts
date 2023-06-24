@@ -1,10 +1,9 @@
-import http from "http";
 import { QueueRabbitProvider } from "./providers/QueueRabbitProvider";
 import { createUserUseCase } from "./useCases/createUserUseCase";
 import { MySqlUserRepository } from "./repositories/MySqlUserRepository";
 import { updateUserUseCase } from "./useCases/updateUserUseCase";
 import { cancelUserUseCase } from "./useCases/cancelUserUseCase";
-import { ApiError } from "./errors";
+import logger from "./utils/logger";
 
 const config = {
   exchanges: [
@@ -54,7 +53,7 @@ const config = {
   ],
 };
 
-export default async function listen() {
+export default async function listenQueue() {
   await QueueRabbitProvider.getInstance().initialize(config);
 
   await QueueRabbitProvider.getInstance().listenQueue({
@@ -66,7 +65,7 @@ export default async function listen() {
         const result = await cancelUserUseCase.execute({
           username,
         });
-        console.log("Mensagem consumida com sucesso - Cancel");
+        logger.info("Mensagem consumida com sucesso - Cancel");
       } catch (e) {
         if (e.msg == "Already Cancelled") {
           await QueueRabbitProvider.getInstance().publish({
@@ -76,7 +75,7 @@ export default async function listen() {
               action: "Cancel User - Already Canceled",
             },
           });
-          console.log(
+          logger.info(
             "Cancelamento movido para fila morta, usuário já cancelado"
           );
         } else {
@@ -105,7 +104,7 @@ export default async function listen() {
             birthdate: new Date(user.birthdate),
             password: user.password,
           });
-          console.log("Mensagem consumida com sucesso - Update");
+          logger.info("Mensagem consumida com sucesso - Update");
         } else {
           const result = await createUserUseCase.execute({
             id: user.id,
@@ -115,7 +114,7 @@ export default async function listen() {
             birthdate: new Date(user.birthdate),
             password: user.password,
           });
-          console.log("Mensagem consumida com sucesso - Create");
+          logger.info("Mensagem consumida com sucesso - Create");
         }
       } catch (e) {
         await QueueRabbitProvider.getInstance().publish({

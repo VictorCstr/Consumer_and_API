@@ -23,4 +23,3 @@ if (cluster.isPrimary) {
     }
   });
 }
-logger.info(`Api running on port ${port} `);

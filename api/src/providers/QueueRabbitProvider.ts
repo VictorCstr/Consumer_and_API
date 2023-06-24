@@ -70,7 +70,6 @@ export class QueueRabbitProvider {
         1000
       );
     });
-    logger.info("AMQP running");
   }
 
   async publish({

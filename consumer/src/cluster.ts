@@ -1,7 +1,8 @@
 import cluster from "cluster";
 import os from "os";
 import http from "http";
-import listen from "./app";
+import listenQueue from "./app";
+import logger from "./utils/logger";
 
 const host = "localhost";
 const port = 8082;
@@ -12,17 +13,17 @@ const requestListener = function (req, res) {
 };
 
 if (cluster.isPrimary) {
-  console.log(`Running on master ${process.pid}`);
+  logger.info(`Running on master ${process.pid}`);
 
   for (let i = 0; i < os.cpus().length; i++) {
     cluster.fork();
 
     cluster.on("exit", (worker, code, signal) => {
-      console.log(`Worker ${worker.process.pid} died`);
+      logger.info(`Worker ${worker.process.pid} died`);
     });
   }
 } else {
   const server = http.createServer(requestListener);
   server.listen(port, host);
-  listen();
+  listenQueue();
 }

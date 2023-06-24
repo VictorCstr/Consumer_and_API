@@ -1,4 +1,5 @@
 import { Channel, Connection, connect } from "amqplib";
+import logger from "../utils/logger";
 
 type Action = (msg: any, channel: Channel) => Promise<void>;
 
@@ -24,20 +25,19 @@ export class QueueRabbitProvider {
     this._channel = await this._conn.createChannel();
 
     this._conn.on("error", (err) => {
+      logger.error(err);
       if (err.message !== "Connection closing") {
-        console.error("[AMQP] conn error", err.message);
+        logger.error("[AMQP] conn error " + err.message);
       }
     });
 
     this._conn.on("close", function (err) {
-      console.error("[AMQP] reconnecting");
+      logger.error("[AMQP] reconnecting" + err);
       return setTimeout(
         async () => this.getInstance().initialize(config),
         1000
       );
     });
-
-    console.log("AMQP Running");
   }
 
   async listenQueue({ queue, action }: { queue: string; action: Action }) {
@@ -46,7 +46,7 @@ export class QueueRabbitProvider {
         action(msg, this._channel);
         this._channel.ack(msg);
       } catch (e) {
-        console.error(e);
+        logger.error(e);
       }
     });
   }
