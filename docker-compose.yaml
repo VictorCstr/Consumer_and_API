@@ -7,9 +7,6 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
-    expose:
-      - "5672"
-      - "15672"
     restart: always
     networks:
       - backend
@@ -49,14 +46,15 @@ services:
     depends_on:
       - rabbit
       - cache
+      - db
     build:
       context: .
       dockerfile: ./api/Dockerfile
       target: development
     ports:
-      - "9080:9080"
+      - "8081:8081"
     expose:
-      - "9080"
+      - "8081"
     restart: always
     env_file:
       - ./api/.env
@@ -72,9 +70,9 @@ services:
       dockerfile: ./consumer/Dockerfile
       target: development
     ports:
-      - "9090:9090"
+      - "8082:8082"
     expose:
-      - "9090"
+      - "8082"
     restart: always
     env_file:
       - ./consumer/.env

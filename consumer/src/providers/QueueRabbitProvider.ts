@@ -29,7 +29,7 @@ export class QueueRabbitProvider {
       }
     });
 
-    this._conn.on("close", function () {
+    this._conn.on("close", function (err) {
       console.error("[AMQP] reconnecting");
       return setTimeout(
         async () => this.getInstance().initialize(config),
@@ -37,7 +37,7 @@ export class QueueRabbitProvider {
       );
     });
 
-    console.log("[AMQP] connected");
+    console.log("AMQP Running");
   }
 
   async listenQueue({ queue, action }: { queue: string; action: Action }) {

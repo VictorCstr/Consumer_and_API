@@ -56,12 +56,14 @@ export class QueueRabbitProvider {
     );
 
     this._conn.on("error", (err) => {
+      console.log(err);
       if (err.message !== "Connection closing") {
         console.error("[AMQP] conn error", err.message);
       }
     });
 
-    this._conn.on("close", function () {
+    this._conn.on("close", function (err) {
+      console.log(err);
       console.error("[AMQP] reconnecting");
       return setTimeout(
         () => QueueRabbitProvider.getInstance().initialize(config),

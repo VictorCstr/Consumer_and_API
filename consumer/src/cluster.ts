@@ -3,7 +3,7 @@ import os from "os";
 import http from "http";
 
 const host = "localhost";
-const port = 9090;
+const port = 8082;
 
 const requestListener = function (req, res) {
   res.writeHead(200);
@@ -21,8 +21,6 @@ if (cluster.isPrimary) {
     });
   }
 } else {
-  console.log(`Worker ${process.pid} initialized`);
-
   const server = http.createServer(requestListener);
   server.listen(port, host);
 }
