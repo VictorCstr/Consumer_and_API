@@ -8,6 +8,11 @@ services:
       - 5672:5672
       - 15672:15672
     restart: always
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
     networks:
       - backend
     volumes:
@@ -44,9 +49,8 @@ services:
   api:
     container_name: fastify_api
     depends_on:
-      - rabbit
-      - cache
-      - db
+      rabbit:
+        condition: service_healthy
     build:
       context: .
       dockerfile: ./api/Dockerfile
@@ -64,7 +68,8 @@ services:
   consumer:
     container_name: consumer_service
     depends_on:
-      - rabbit
+      rabbit:
+        condition: service_healthy
     build:
       context: .
       dockerfile: ./consumer/Dockerfile

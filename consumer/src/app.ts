@@ -54,7 +54,7 @@ const config = {
   ],
 };
 
-async function listen() {
+export default async function listen() {
   await QueueRabbitProvider.getInstance().initialize(config);
 
   await QueueRabbitProvider.getInstance().listenQueue({
@@ -127,5 +127,3 @@ async function listen() {
     },
   });
 }
-
-listen();

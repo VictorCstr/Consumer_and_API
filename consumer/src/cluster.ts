@@ -1,6 +1,7 @@
 import cluster from "cluster";
 import os from "os";
 import http from "http";
+import listen from "./app";
 
 const host = "localhost";
 const port = 8082;
@@ -23,4 +24,5 @@ if (cluster.isPrimary) {
 } else {
   const server = http.createServer(requestListener);
   server.listen(port, host);
+  listen();
 }
