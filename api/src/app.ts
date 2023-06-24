@@ -2,7 +2,7 @@ import fastify from "fastify";
 import { routes } from "./routes";
 import { QueueRabbitProvider } from "./providers/QueueRabbitProvider";
 
-const app = fastify({ logger: true });
+const app = fastify();
 
 app.register(require("@fastify/jwt"), {
   secret: process.env.SECRET_KEY,

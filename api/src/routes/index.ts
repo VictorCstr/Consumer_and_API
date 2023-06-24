@@ -4,6 +4,7 @@ import { cancelUserUseCase } from "../useCases/cancelUserUseCase";
 import { cancelUserOpts } from "../entities/cancelUser/cancelUserOpts";
 import { loginUserOpts } from "../entities/loginUser/loginUserOpts";
 import { loginUseCase } from "../useCases/loginUseCase";
+import logger from "../utils/logger";
 
 async function routes(fastify, options) {
   fastify.post(
@@ -23,6 +24,10 @@ async function routes(fastify, options) {
         birthdate,
       });
 
+      logger.info("Received request on route POST /USER/");
+      logger.info(request);
+      logger.info(reply);
+
       return reply.send(execute);
     }
   );
@@ -40,6 +45,10 @@ async function routes(fastify, options) {
         username,
         password,
       });
+
+      logger.info("Received request on route POST /USER/CANCEL");
+      logger.info(request);
+      logger.info(reply);
 
       return reply.send(execute);
     }
@@ -60,6 +69,10 @@ async function routes(fastify, options) {
       },
       { expiresIn: "1h" }
     );
+
+    logger.info("Received request on route POST /USER/LOGIN");
+    logger.info(request);
+    logger.info(reply);
 
     return reply.send(token);
   });
