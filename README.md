@@ -37,7 +37,8 @@ $ git clone
 $ cd pasta
 
 # Criar as variaveis para o container.
-$ Para melhorar o teste da aplicação, foi retirado o .env de dentro do gitignore, para início imediato do sistema sem a necessidade de configuração
+$ Para melhorar o teste da aplicação, foi retirado o .env de dentro do gitignore, para início imediato
+$ do sistema sem a necessidade de configuração
 
 # Faça a instalação e execução de todos os containers com o compose
 $ docker-compose up --build
