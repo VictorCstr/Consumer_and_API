@@ -4,6 +4,7 @@ import { ApiError } from "../errors";
 import bcrypt from "bcrypt";
 import { Login } from "../entities/Login";
 import { ICacheRepository } from "../interfaces/ICacheRepository";
+import logger from "../utils/logger";
 
 const prisma = new PrismaClient();
 
@@ -20,7 +21,7 @@ export class MySqlUserRepository implements IUserRepository {
 
       return user.length > 0 ? true : false;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       throw new ApiError(400, error);
     }
   }
@@ -36,7 +37,7 @@ export class MySqlUserRepository implements IUserRepository {
 
       return true;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       throw new ApiError(400, error);
     }
   }
@@ -51,6 +52,7 @@ export class MySqlUserRepository implements IUserRepository {
         username: user[0]?.username,
       };
     } catch (error) {
+      logger.error(error);
       throw new ApiError(400, error);
     }
   }
