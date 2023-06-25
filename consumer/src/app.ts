@@ -57,40 +57,6 @@ export default async function listenQueue() {
   await QueueRabbitProvider.getInstance().initialize(config);
 
   await QueueRabbitProvider.getInstance().listenQueue({
-    queue: "cancel",
-    action: async (msg) => {
-      const data = msg.content.toString();
-      const username = JSON.parse(data);
-      try {
-        const result = await cancelUserUseCase.execute({
-          username,
-        });
-        logger.info("user to cancel: " + username);
-        logger.info("Mensagem consumida com sucesso - Cancel");
-      } catch (e) {
-        if (e.msg == "Already Cancelled") {
-          await QueueRabbitProvider.getInstance().publish({
-            exchange: "cancel-dlx",
-            content: {
-              username: username,
-              action: "Cancel User - Already Canceled",
-            },
-          });
-          logger.info("user already cancelled: " + username);
-          logger.info(
-            "Cancelamento movido para fila morta, usuário já cancelado"
-          );
-        } else {
-          await QueueRabbitProvider.getInstance().publish({
-            exchange: "cancel.ttl",
-            routingKey: "retry-1",
-            content: { ...username, retry: "retry" },
-          });
-        }
-      }
-    },
-  });
-  await QueueRabbitProvider.getInstance().listenQueue({
     queue: "create",
     action: async (msg) => {
       const data = msg.content.toString();
@@ -126,6 +92,40 @@ export default async function listenQueue() {
           routingKey: "retry-1",
           content: { ...user, retry: "retry" },
         });
+      }
+    },
+  });
+  await QueueRabbitProvider.getInstance().listenQueue({
+    queue: "cancel",
+    action: async (msg) => {
+      const data = msg.content.toString();
+      const username = JSON.parse(data);
+      try {
+        const result = await cancelUserUseCase.execute({
+          username,
+        });
+        logger.info("user to cancel: " + username);
+        logger.info("Mensagem consumida com sucesso - Cancel");
+      } catch (e) {
+        if (e.msg == "Already Cancelled") {
+          await QueueRabbitProvider.getInstance().publish({
+            exchange: "cancel-dlx",
+            content: {
+              username: username,
+              action: "Cancel User - Already Canceled",
+            },
+          });
+          logger.info("user already cancelled: " + username);
+          logger.info(
+            "Cancelamento movido para fila morta, usuário já cancelado"
+          );
+        } else {
+          await QueueRabbitProvider.getInstance().publish({
+            exchange: "cancel.ttl",
+            routingKey: "retry-1",
+            content: { ...username, retry: "retry" },
+          });
+        }
       }
     },
   });

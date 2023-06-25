@@ -68,6 +68,8 @@ services:
   consumer:
     container_name: consumer_service
     depends_on:
+      api:
+        condition: service_started
       rabbit:
         condition: service_healthy
     build:

@@ -24,6 +24,39 @@ export class QueueRabbitProvider {
     this._conn = await connect(QUEUE_URL);
     this._channel = await this._conn.createChannel();
 
+    // create exchanges
+    Promise.all(
+      [].concat(
+        config.exchanges?.map((exchange) =>
+          this._channel.assertExchange(exchange.name, exchange.type, {
+            durable: true,
+          })
+        )
+      )
+    );
+
+    // create queues
+    Promise.all(
+      [].concat(
+        config.queues?.map((queue) =>
+          this._channel.assertQueue(queue.name, {
+            durable: true,
+            deadLetterExchange: queue.dlx,
+            messageTtl: queue.ttl,
+          })
+        )
+      )
+    );
+
+    // bind all
+    Promise.all(
+      [].concat(
+        config.bindings?.map((binding) =>
+          this._channel.bindQueue(binding.target, binding.exchange, binding.key)
+        )
+      )
+    );
+
     this._conn.on("error", (err) => {
       logger.error(err);
       if (err.message !== "Connection closing") {
